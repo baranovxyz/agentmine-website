@@ -1,0 +1,8 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Agentmine">
+  <!-- Strata / core-sample bands: each band reads as a row in a query result,
+       stacked like geological layers. Widest copper band = the match. -->
+  <rect x="4" y="5" width="17" height="4" rx="2" fill="#ECE6D8"/>
+  <rect x="4" y="12" width="24" height="4" rx="2" fill="#E8933B"/>
+  <rect x="4" y="19" width="13" height="4" rx="2" fill="#45B79A"/>
+  <rect x="4" y="26" width="20" height="4" rx="2" fill="#A86A2C"/>
+</svg>
