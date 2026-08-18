@@ -90,6 +90,11 @@ unfiltered <code>normalize</code> stage.</p>
 <p>When Claude Code is included, <code>normalize</code> also reads workflow manifests and journals from the
 source session tree into lossless workflow tables. <code>extract</code> derives run, phase, and agent
 rollups for <code>agentmine workflows</code> and <code>agentmine workflow &#x3C;run-id></code>.</p>
+<p><code>normalize</code> marks every changed session and raw workflow for extraction. <code>agentmine stats</code> exposes
+those pending signals as <code>data.freshness</code>; <code>query</code> and fact-backed browse commands add an
+<code>EXTRACTION_PENDING</code> warning until <code>agentmine extract</code> clears them. The warning keeps reads
+non-mutating while preventing a recent normalized date from being mistaken for complete derived
+facts.</p>
 <h2 id="safe-to-rerun">Safe to rerun</h2>
 <p>The pipeline is designed to be safe to rerun:</p>
 <ul>
@@ -98,8 +103,8 @@ rollups for <code>agentmine workflows</code> and <code>agentmine workflow &#x3C;
 (content-hash caching — unchanged files are not re-parsed).</li>
 <li><code>extract</code> rebuilds derived fact tables in transactions, so a partial failure does not leave
 half-written tables.</li>
-<li><code>backup</code> snapshots <code>sessions.db</code> before risky rebuilds (for example, before <code>normalize --force</code>
-or a schema rebuild).</li>
+<li><code>backup</code> snapshots the hot database and every existing payload archive before risky rebuilds
+(for example, before <code>normalize --force</code> or a schema rebuild).</li>
 </ul>
 <h2 id="no-llm-in-the-default-path">No LLM in the default path</h2>
 <p>The default <code>sync -> normalize -> extract</code> path calls no LLM. Optional local embedding requests
