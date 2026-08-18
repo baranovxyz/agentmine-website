@@ -267,6 +267,41 @@ replaced, and for a newer Agentmine having migrated the corpus, and exits when
 either happens. A supervised daemon then restarts into the current version by
 itself, so upgrading Agentmine never leaves your commands on one version and the
 process feeding their corpus on another.</p>
+<p><strong>Which install you supervise decides whether that works.</strong> The daemon notices an
+upgrade by watching the program file it was started from, so it only sees one if
+your installer actually replaces that file:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Install</th><th>Upgrade behaviour</th></tr></thead><tbody><tr><td><code>npm install -g agentmine</code></td><td>Detected. The package directory is replaced in place.</td></tr><tr><td>A standalone executable you overwrite</td><td>Detected. One file, one path.</td></tr><tr><td><code>pnpm add -g agentmine</code></td><td><strong>Not detected.</strong></td></tr></tbody></table>
+<p>pnpm stores each version in its own directory, repoints the launcher at the new
+one, and leaves the old directory behind — so nothing the running daemon can
+observe ever changes, and it keeps serving the version it started with while your
+commands report the new one. If you install with pnpm, restart the service
+yourself after upgrading (<code>systemctl --user restart agentmine-daemon.service</code>), or
+supervise a standalone executable instead.</p>
+<p>One more thing to know about the refusal: the check looks for a version-control
+repository anywhere <em>above</em> the program, so if you keep your home directory under
+git, every install path inside it is refused on those grounds. Pass
+<code>--allow-ephemeral-path</code> if that is your setup.</p>
 <h2 id="maintenance">Maintenance</h2>
 
 
