@@ -91,9 +91,15 @@ This flag controls canonical session fields; workflow records described below re
 either mode.</p>
 <h2 id="lossless-records-remain-unredacted">Lossless records remain unredacted</h2>
 <p>Redaction protects normalized searchable session text and canonical message and tool previews. It
-does not make every bounded value in the database safe. Lossless JSON and full-output fields may
-retain secrets: this includes <code>raw_events.raw_json</code>, <code>tool_outputs.output_text</code>,
-<code>tool_calls.args_json</code>, and <code>message_parts.payload_json</code>.</p>
+does not make every bounded value in the corpus safe. Lossless JSON and full-output fields may
+retain secrets: this includes <code>tool_calls.args_json</code> and <code>message_parts.payload_json</code> in
+<code>sessions.db</code>, plus the verbatim payload archives described next.</p>
+<p><strong>A corpus is three files, and two of them hold the least-redacted data.</strong> Verbatim source events
+live in <code>sessions-raw.db</code> and full tool output in <code>sessions-tools.db</code>, beside <code>sessions.db</code>. Their
+payload is stored compressed, which is a storage format and <strong>not</strong> a protection: it decompresses
+back to the exact source bytes. When copying, sharing, backing up, or deleting a corpus, treat all
+three files as equally sensitive — handling <code>sessions.db</code> alone leaves the unredacted record
+behind.</p>
 <p>Workflow ingest is a separate lossless path and does not pass through canonical session redaction.
 <code>raw_workflow_runs.raw_json</code>, <code>raw_workflow_runs.raw_path</code>, and
 <code>raw_workflow_journal.raw_json</code> retain source values. Derived fields copied from those records —
